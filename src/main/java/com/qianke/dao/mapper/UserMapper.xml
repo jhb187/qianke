@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianke.dao.UserDao">
+
+	<select id="getOne" resultType="User">
+		select contact,mobile,address,tenant_code
+		from user
+		where openid =#{openid}
+
+	</select>
+
+    
+     <update id="changeDeliverManStatus">
+      update deliveryman
+      set status=#{status}
+      where openid=#{openid}
+     
+     </update>
+
+	<select id="getDeliverManById" resultType="DeliveryMan">
+		select name,mobile,openid
+		from deliveryman
+		where openid=#{deliverman}
+
+	</select>
+
+
+
+	<select id="listDeliveryMan" resultType="DeliveryMan">
+		select openid, mobile, name, status
+		from deliveryman
+		where tenant_code=#{tenant_code}
+	</select>
+
+
+	<insert id="insertWxUser">
+		insert
+		user(openid,access_token,refresh_token,address,contact,mobile,tenant_code)
+		values(#{openid},#{access_token},#{refresh_token},#{address},#{contact},#{mobile},#{tenant_code})
+
+	</insert>
+
+
+	<insert id="insertWorker">
+		insert
+		deliveryman(openid,name,mobile,tenant_code)
+		values(#{openid},#{name},#{mobile},#{tenant_code})
+
+	</insert>
+
+	<select id="getUserByOpenid" resultType="User">
+		select openid,mobile,contact,address from user
+		where openid=#{openid}
+
+	</select>
+     
+     
+     <select id="checkWorkerByOpenid" resultType="DeliveryMan">
+        select mobile from deliveryman
+        where openid=#{openid}
+
+    </select>
+     
+	<select id="getUserByMobile" resultType="User">
+		select mobile from user
+		where mobile=#{mobile}
+
+	</select>
+	
+	
+	   <select id="getWorkerByMobile" resultType="User">
+        select mobile from deliveryman
+        where mobile=#{mobile}
+
+    </select>
+
+
+</mapper>      

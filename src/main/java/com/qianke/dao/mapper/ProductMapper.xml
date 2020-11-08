@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianke.dao.ProductDao">
+
+
+	<insert id="addCategory">
+		insert category(name)
+		value(#{name})
+	</insert>
+
+	<insert id="creatOrder">
+		insert into
+		`orders`(contact,mobile,delivery_address,orderid,money,openid,product_info,create_time,tenant_code)
+		values(#{contact},#{mobile},#{delivery_address},#{orderid},#{money},#{openid},#{product_info},#{create_time},#{tenant_code})
+	</insert>
+
+
+	<insert id="creatCardBank">
+		insert into
+		card_bank(id,type,pailcount,openid,mobile,contact,create_time)
+		values(#{id},#{type},#{pailcount},#{openid},#{mobile},#{contact},#{create_time}
+		)
+
+	</insert>
+
+
+	<select id="getCardByParam" resultType="CardBank">
+		select
+		id,type,pailcount,openid,mobile,contact,status,create_time
+		from
+		card_bank
+		where openid=#{openid} and type=#{type}
+
+	</select>
+
+	<select id="listCardWaterByOpenid" resultType="Product">
+		select c.id as id,c.pailcount as count,p.name,c.type as category
+        from card_bank c ,product p
+        where openid =#{openid} and c.type=p.id;
+
+	</select>
+
+	<select id="listProduct" resultType="Product">
+		select
+		id,name,price,count,img
+		from product
+		where tenant_code=#{tenantCode} and
+		category=#{category}
+
+	</select>
+
+	<select id="listWaterCard" resultType="WaterCard">
+		select
+		id,pailcount,tenant_code,name,price,img
+		from watercard
+		where
+		tenant_code=#{tenant_code}
+
+	</select>
+
+
+	<select id="getOrderInfoById" resultType="Order">
+		select
+		orderid,product_info,contact,mobile,delivery_address,create_time,deliveryman,openid,status
+		from orders
+		where orderid=#{orderid}
+
+	</select>
+
+
+
+
+
+	<select id="getOrderByParam" resultType="Order">
+		select
+		money,product_info,delivery_address,mobile,contact,orderid,status,create_time
+		from orders
+		where tenant_code=#{tenant_code} and status=#{status}
+		order
+		by create_time
+	</select>
+
+	<select id="getProductById" resultType="Product">
+		select name, price,img
+		from product
+		where id=#{id}
+
+	</select>
+
+
+	<select id="getCardById" resultType="WaterCard">
+		select id, name,
+		price,img,pailcount
+		from watercard
+		where id=#{id}
+
+	</select>
+
+
+	<update id="payOrder">
+		update orders set status='1'
+		where orderid=#{orderid}
+		and money=#{money}
+
+	</update>
+
+
+
+
+	<update id="confirmDeliver">
+		update orders set status=#{status}
+		where
+		orderid=#{orderid}
+
+	</update>
+
+	<update id="addCardBankPailCount">
+		update card_bank
+		set pailcount =#{pailcount}
+		where openid=#{openid} and type=#{type}
+
+	</update>
+
+
+
+</mapper>      

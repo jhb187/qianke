@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianke.dao.TenantDao">
+    
+    
+    
+    <select  id="selectOneByCode" resultType="Tenant"   >
+        select tenant_id as tenantId,
+        tenant_code as tenantCode,
+        tenant_name as tenantName,
+        mobile,address,status,remark,role,mch_id,auto_reply,follow_reply
+        from tenant
+        where
+        tenant_code=#{tenantCode}
+    
+    </select>     
+         
+         
+         
+	<select id="selectOne" resultType="Tenant">
+		select tenant_id as tenantId,
+		tenant_code as tenantCode,
+		tenant_name as tenantName,
+		mobile,address,status,remark,role,mch_id
+		from tenant
+		where
+		tenant_code=#{tenantCode} and
+		pwd=#{pwd}
+	</select>
+	
+	<select id="selectAll" resultType="Tenant">
+	select tenant_id as tenantId,
+        tenant_code as tenantCode,
+        tenant_name as tenantName,
+        mobile,address,status,remark,role
+        from tenant
+	</select>
+	
+	
+	<update id="switchTenantStaus" >
+	   update tenant
+	   set status=#{status}
+	   where tenant_code=#{tenantCode}
+	
+	
+	</update>
+	
+	
+	
+</mapper>      
