@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.qianke.dao.TenantDao;
+import com.qianke.exception.BaseException;
+import com.qianke.model.TencentConfigDTO;
 import org.springframework.stereotype.Service;
 
 import com.qianke.util.CodeUtil;
@@ -26,8 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class SMSService {
-
-	// TODO:1.随机产生验证码，2.并将验证码写进缓存；3.写验证码校验方法
+    @Resource
+    TenantDao tenantDao;
 	@Resource
 	SMSUtil smsUtil;
 	@Resource
@@ -65,4 +68,17 @@ public class SMSService {
 		}
 	}
 
+
+	/**
+	 * @Description 查询租户对应的短信参数配置
+	 * @param mobile ，handle
+	 * @return
+	 */
+	public TencentConfigDTO getSMSConfig(String tenantCode) {
+        TencentConfigDTO tencentConfigDTO=tenantDao.getSMSConfigByCode(tenantCode);
+        if(tencentConfigDTO!=null){
+            return tencentConfigDTO;
+        }
+        throw new BaseException("00002","当前租户短信配置为空");
+	}
 }

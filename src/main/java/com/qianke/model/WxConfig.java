@@ -3,13 +3,13 @@
  */
 package com.qianke.model;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import com.qianke.service.WxService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import com.qianke.service.CacheService;
-
 import lombok.Data;
 
 /**
@@ -23,8 +23,11 @@ import lombok.Data;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "wechat")
+@Slf4j
 public class WxConfig {
+	@Value("${tenant_code}")
+	String tenant_code;
+
 	String token;
 	String AppID;
 	String AppSecret;
@@ -33,8 +36,25 @@ public class WxConfig {
 	String NotifyUrl;
 	@Resource
 	CacheService cacheService;
-	// *******以下url配置不需要修改
 
+	@Resource
+	WxService  wxService;
+
+	@PostConstruct
+	public void getWXConfigFromDb(){
+		log.info("开始从数据库加载微信支付配置...");
+		WxConfigDTO wxConfig=wxService.getWxConfig(tenant_code);
+		token=wxConfig.token;
+		AppID=wxConfig.AppID;
+		baseUrl=wxConfig.baseUrl;
+		MchId=wxConfig.MchId;
+		NotifyUrl=wxConfig.NotifyUrl;
+		AppSecret=wxConfig.AppSecret;
+		log.info("当前租户微信支付配置，token={},AppID={},baseUrl={},MchId={},NotifyUrl={},AppSecret={}",token,AppID,baseUrl,MchId,NotifyUrl,AppSecret);
+	}
+
+
+	// *******以下url配置不需要修改
 	// 获取accessToken
 	public String getAccessTokenUrl() {
 		return "/cgi-bin/token?grant_type=client_credential&appid=" + AppID + "&secret=" + AppSecret;

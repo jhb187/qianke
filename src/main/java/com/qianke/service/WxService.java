@@ -11,19 +11,16 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.qianke.dao.TenantDao;
+import com.qianke.exception.BaseException;
+import com.qianke.model.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-
 import com.qianke.dao.UserDao;
-import com.qianke.model.TemplateKeyWord;
-import com.qianke.model.TemplateMsg;
-import com.qianke.model.User;
-import com.qianke.model.WebAccessToken;
-import com.qianke.model.WxConfig;
 import com.qianke.util.CodeUtil;
 import com.qianke.util.HttpClientUtil;
 import com.qianke.util.JsonUtil;
@@ -44,7 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class WxService {
-
+	@Resource
+	TenantDao tenantDao;
 	@Resource
 	WxConfig wxConfig;
 
@@ -139,12 +137,6 @@ public class WxService {
 	 * @return
 	 */
 	public void getAccessToken() {
-		/*HttpClientUtil.postForm(webClient, params, wxConfig.getAccessTokenUrl()).subscribe(response -> {
-			cacheService.setCache("access_token", response.get("access_token").toString(),
-					response.get("expires_in").toString());
-			log.info("保存入redis的access_token:" + response.get("access_token").toString());
-		});*/
-		
 		@SuppressWarnings("unchecked")
 		Map<String,Object> response= HttpClientUtil.postForm(webClient, params, wxConfig.getAccessTokenUrl()).block();
 		cacheService.setCache("access_token", response.get("access_token").toString(),
@@ -272,6 +264,14 @@ public class WxService {
 			log.info("【模板消息接口返回】:"+response);
 		});
 	}
-	
+
+
+	public WxConfigDTO getWxConfig(String tenantCode) {
+		WxConfigDTO wxConfigDTO=tenantDao.getWxConfigByCode(tenantCode);
+		if(wxConfigDTO!=null){
+			return wxConfigDTO;
+		}
+		throw new BaseException("00003","当前租户微信配置为空");
+	}
 
 }

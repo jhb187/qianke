@@ -11,8 +11,8 @@
 	</parent>
 	<groupId>com</groupId>
 	<artifactId>qianke</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<version>X</version>
+	<packaging>jar</packaging>
 	<name>qianke</name>
 	<description>Qianke project for Spring Boot</description>
 

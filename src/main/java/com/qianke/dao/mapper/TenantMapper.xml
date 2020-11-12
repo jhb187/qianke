@@ -36,8 +36,22 @@
         mobile,address,status,remark,role
         from tenant
 	</select>
-	
-	
+
+	<select id="getSMSConfigByCode" resultType="TencentConfigDTO">
+	select baseurl,sdkappid,appKey,tplid
+        from tenant_config
+        where  tenant_code=#{tenantCode}
+	</select>
+
+    <select id="getWxConfigByCode" resultType="WxConfigDTO">
+	select token,AppID,AppSecret,
+	    wxbaseUrl as baseUrl,
+	    MchId,NotifyUrl
+        from tenant_config
+        where  tenant_code=#{tenantCode}
+	</select>
+
+
 	<update id="switchTenantStaus" >
 	   update tenant
 	   set status=#{status}

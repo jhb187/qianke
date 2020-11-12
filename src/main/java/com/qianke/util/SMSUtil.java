@@ -1,6 +1,5 @@
 package com.qianke.util;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -98,14 +97,5 @@ public class SMSUtil {
 		return (new Random(getCurrentTime())).nextInt(900000) + 100000;
 	}
 
-	/**
-	 * @Description
-	 * @param
-	 * @return
-	 */
-	public static void main(String[] args) {
-		String unixTime = Long.toString(new Date().getTime());
-		System.out.println(unixTime);
-	}
 
 }
