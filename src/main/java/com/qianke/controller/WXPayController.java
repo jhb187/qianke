@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.qianke.controller.base.RespCode;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,8 +64,12 @@ public class WXPayController {
 		WxPayDto payParam = new WxPayDto();
 		payParam.setMoney(Double.parseDouble(datas.get("price").toString()));
 		payParam.setOpenid(datas.get("openId").toString());
-		
-		
+		if("0.00".equals(datas.get("price").toString())){
+			log.info("价格不合法");
+			BaseResponse<PayResponse> payresult=new BaseResponse<PayResponse>(RespCode.RESP_CODE_999999);
+			return payresult;
+		}
+
 		Map<String,Object> user =(Map<String,Object>) datas.get("orderId");
 		//TODO:根据user  与orderName处理订单，减库存，通知买家，在支付回执成功的时候
 		
