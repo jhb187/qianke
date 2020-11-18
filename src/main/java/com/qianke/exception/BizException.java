@@ -2,8 +2,10 @@ package com.qianke.exception;
 
 
 /**
+ * GITHUBCESHI
  * 业务异常
  */
+
 public class BizException extends BaseException {
 
     private static final long serialVersionUID = 5171771394185469307L;
