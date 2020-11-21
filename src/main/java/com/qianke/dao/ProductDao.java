@@ -119,6 +119,8 @@ public interface ProductDao {
 	*/
 	public int addCardBankPailCount(CardBank cardResult);
 
+	public CardBank getCardCountByOpenid(@Param("openid")String openid,@Param("type")int type);
+
 	/**
 	* @Description 根据openid查询用户下面的水卡桶数
 	* @param

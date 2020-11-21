@@ -3,10 +3,13 @@
  */
 package com.qianke.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.qianke.model.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.qianke.controller.base.BaseResponse;
-import com.qianke.model.Category;
-import com.qianke.model.Order;
-import com.qianke.model.Product;
-import com.qianke.model.WaterCard;
 import com.qianke.service.ProductService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -89,7 +88,42 @@ public class ProductController {
 		BaseResponse<List<Product>> result=new BaseResponse<List<Product>>(productList);
 		return result;
 	}
-	
+
+
+
+	/**
+	 * @Description 用水卡数抵扣当前金额
+	 * @param  tenantCode，category
+	 * @return
+	 */
+	@RequestMapping(value = "/cardCalcu")
+	public BaseResponse<Integer> listProduct(@RequestBody HashMap<String,String> product) {
+		log.info("【/product/cardCalcu】接口调用开始"+product);
+		int productId=Integer.parseInt(product.get("productId"));
+		String openId=product.get("openId");
+		int count=Integer.parseInt(product.get("count"));
+		CardBank cardBank=productService.getCardCountByOpenid(openId,productId);
+		if(cardBank!=null){
+			//todo:处理减法的逻辑，怎样抵扣
+			//卡余额>买桶数，传0；无需付钱；到时候提交订单时，需要再查一遍接口，抵扣掉；
+			//卡余额，小于桶数，count-getPailcount=还要付的桶钱；
+			//卡余额为空，传原先count
+			if(cardBank.getPailcount()>count){
+				return new BaseResponse<Integer>(0);//卡余额>买桶数，传0；无需付钱,提交订单.只扣卡余额
+			}
+			if(cardBank.getPailcount()<count){
+				return new BaseResponse<Integer>(count-cardBank.getPailcount());//还需要付的桶数
+			}
+			if(cardBank.getPailcount()==count){
+				return new BaseResponse<Integer>(0);//水卡全额抵扣，无需付钱
+			}
+			return new BaseResponse<Integer>(cardBank.getPailcount()-count);
+		}else{
+			return new BaseResponse<Integer>(count);//无水卡，直接付原先桶数
+		}
+
+	}
+
 	
 	
 	/**

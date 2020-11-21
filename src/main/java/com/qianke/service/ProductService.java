@@ -8,17 +8,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.qianke.model.*;
 import org.springframework.stereotype.Service;
 
 import com.qianke.dao.ProductDao;
-import com.qianke.model.Category;
-import com.qianke.model.DeliveryMan;
-import com.qianke.model.MsgTemplate;
-import com.qianke.model.Order;
-import com.qianke.model.Product;
-import com.qianke.model.TemplateKeyWord;
-import com.qianke.model.TemplateMsg;
-import com.qianke.model.WaterCard;
 import com.qianke.util.DateUtil;
 
 /**
@@ -183,6 +176,10 @@ public class ProductService {
 
 		return productDao.getOrderInfoById(order.getOrderid());
 	}
+	public CardBank getCardCountByOpenid(String openid, int productId) {
+		return productDao.getCardCountByOpenid(openid,productId);
+	}
+
 
 	/**
 	 * @Description

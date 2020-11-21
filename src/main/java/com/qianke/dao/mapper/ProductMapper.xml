@@ -40,6 +40,13 @@
         where openid =#{openid} and c.type=p.id;
 
 	</select>
+	<select id="getCardCountByOpenid" resultType="CardBank" >
+		select pailcount
+		from  card_bank
+        where openid =#{openid} and type =#{type}
+	</select>
+
+
 
 	<select id="listProduct" resultType="Product">
 		select
