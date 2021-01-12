@@ -5,7 +5,6 @@ package com.qianke.controller.websocket;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
-
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -46,12 +45,18 @@ public class WebSocketServer {
 	 * 接收sid
 	 */
 	private String sid = "";
+	/**
+	 * ws超时时间---毫秒--一个小时重连一次
+	 */
+	public static final long MAX_TIME_OUT = 60 * 60 * 1000;
 
 	/**
 	 * 连接建立成功调用的方法
 	 **/
 	@OnOpen
 	public void onOpen(Session session, @PathParam("sid") String sid) {
+		session.setMaxIdleTimeout(MAX_TIME_OUT);
+		log.info("webSocket server session timeOut,{} s",session.getMaxIdleTimeout()/1000);
 		this.session = session;
 		// 加入set中
 		webSocketSet.add(this);
