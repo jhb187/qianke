@@ -39,6 +39,7 @@ public class SMSUtil {
 		webClient = WebClient.create(config.getBaseurl());
 		random = getRandom();
 		apiUrl = "/sendsms?sdkappid=" + config.getSdkappid() + "&random=" + random;
+		log.info("短信请求webclient初始化完成，baseUrl:{},random:{},apiUrl:{}",config.getBaseurl(),random,apiUrl);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,6 +64,8 @@ public class SMSUtil {
 		 * HttpClientUtil.postJSONWithHead(webClient, formData, apiUrl,
 		 * header).subscribe(response -> { log.info("调用腾讯短信接口返回:"+response); });
 		 */
+		apiUrl = "/sendsms?sdkappid=" + config.getSdkappid() + "&random=" + random;
+		log.info("currrnt apiUrl,{}",apiUrl);
 		Map<String, Object> res = HttpClientUtil.postJSONWithHead(webClient, formData, apiUrl, header).block();
 		log.info("腾信短信接口返回:"+res.toString());
 		return res;
