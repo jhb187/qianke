@@ -29,6 +29,9 @@ public class ProductService {
 	ProductDao productDao;
 
 	@Resource
+	PageConfig pageConfig;
+
+	@Resource
 	WxService wxService;
 
 	@Resource
@@ -85,7 +88,7 @@ public class ProductService {
 		templateMsg.setTouser(deliverman);//
 		templateMsg.setTemplate_id(MsgTemplate.ORDER_RECEIVING.getTemplate_id());
 		order = productDao.getOrderInfoById(order.getOrderid());
-		templateMsg.setUrl("http://qianke668.club:8090/receive-order.html?orderid=" + order.getOrderid() + "&openid="
+		templateMsg.setUrl( pageConfig.getBaseurl()+"receive-order.html?orderid=" + order.getOrderid() + "&openid="
 				+ order.getOpenid() + "&deliverman=" + deliverman + "&status=" + order.getStatus());// 确认接单的页面；orderid传入，在这个页面修改状态；
 		HashMap<String, String> param = new HashMap<String, String>();
 
