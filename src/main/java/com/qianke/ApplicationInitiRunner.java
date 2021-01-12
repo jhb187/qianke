@@ -36,6 +36,7 @@ public class ApplicationInitiRunner implements ApplicationRunner {
 		//调用获取access_token的方法，存入缓存
 		log.info("初始化access_token开始执行");
 		wxService.getAccessToken();
+		log.info("access_token存储完毕，开始获取jsapiTicket");
 		wxService.getJsapiTicket();
 		
 	}
