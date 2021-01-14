@@ -144,45 +144,48 @@ public class WeChatController {
     public void getUserCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 根据state，重定向到不同的业务页面 跳转之前，先判断，该openid在数据库中是否存在，如果存在，证明已经注册过信息，
         // 如果数据库中没有，则让用户去注册（手机，地址，联系人，openid，access_token），
-        WebAccessToken webAccessToken = wxService.getWebAccessToken(request.getParameter("code"));
-        User user = wxService.getUserByOpenid(webAccessToken);
-        log.info("根据openid查询到的user是:" + user);
 
+        //根据是否是员工注册走两套逻辑
+        WebAccessToken webAccessToken = wxService.getWebAccessToken(request.getParameter("code"));
         String state = request.getParameter("state");
         if ("worker".equals(state)) {
-            response.sendRedirect(pageConfig.getBaseurl()+"worker-add.html?openid=" + webAccessToken.getOpenid());
-        }
-        // 根据state参数做重定向三个不同的入口网页
-        if (user != null) {
-            // 已经注册过，但凡注册，就要填手机号，(openid)登录过的老用户
-            // 跳去三个业务页面
-            switch (state) {
-                // 一键订水的页面
-                case WATER:
-                    response.sendRedirect(pageConfig.getBaseurl()+"buywater.html?user=" + user.getOpenid());
-                    break;
-                // 水卡充值
-                case CARD:
-                    response.sendRedirect(pageConfig.getBaseurl()+"watercard.html?user=" + user.getOpenid());
-                    break;
-                // 在线商城
-                case MALL:
-                    response.sendRedirect(pageConfig.getBaseurl()+"mall.html?user=" + user.getOpenid());
-                    break;
-                // 个人中心
-                case CENTER:
-                    response.sendRedirect(pageConfig.getBaseurl()+"user-center.html?user=" + user.getOpenid());
-                    break;
-                default:
-                    response.sendRedirect(pageConfig.getBaseurl()+"404.html");
-            }
+            //直接跳到员工注册页面，无需查是否注册，在注册界面会有接口进行检查
+            response.sendRedirect(pageConfig.getBaseurl() + "worker-add.html?openid=" + webAccessToken.getOpenid());
         } else {
-            //送水工扫码注册
-            response.sendRedirect(pageConfig.getBaseurl()+"member-add.html?openid=" + webAccessToken.getOpenid()
-                    + "&access_token=" + webAccessToken.getAccess_token() + "&refresh_token="
-                    + webAccessToken.getRefresh_token() + "&state=" + state);
+            //为普通用户，根据是否注册，进行业务页面跳转，或者跳去用户注册页面
+            User user = wxService.getUserByOpenid(webAccessToken);
+            log.info("根据openid查询到的user是:" + user);
+            // 根据state参数做重定向三个不同的入口网页
+            if (user != null) {
+                // 已经注册过，但凡注册，就要填手机号，(openid)登录过的老用户
+                // 跳去三个业务页面
+                switch (state) {
+                    // 一键订水的页面
+                    case WATER:
+                        response.sendRedirect(pageConfig.getBaseurl() + "buywater.html?user=" + user.getOpenid());
+                        break;
+                    // 水卡充值
+                    case CARD:
+                        response.sendRedirect(pageConfig.getBaseurl() + "watercard.html?user=" + user.getOpenid());
+                        break;
+                    // 在线商城
+                    case MALL:
+                        response.sendRedirect(pageConfig.getBaseurl() + "mall.html?user=" + user.getOpenid());
+                        break;
+                    // 个人中心
+                    case CENTER:
+                        response.sendRedirect(pageConfig.getBaseurl() + "user-center.html?user=" + user.getOpenid());
+                        break;
+                    default:
+                        response.sendRedirect(pageConfig.getBaseurl() + "404.html");
+                }
+            } else {
+                //用户注册
+                response.sendRedirect(pageConfig.getBaseurl() + "member-add.html?openid=" + webAccessToken.getOpenid()
+                        + "&access_token=" + webAccessToken.getAccess_token() + "&refresh_token="
+                        + webAccessToken.getRefresh_token() + "&state=" + state);
+            }
         }
-
     }
 
     /**
