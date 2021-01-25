@@ -137,13 +137,13 @@ public class ProductController {
 	/**
 	 * @Description 查询订单
 	 * @param  status，category
-	 * @return
+	 * @return   TODO:优化代码结构，去掉双层for循环；存订单表的时候，就可以直接存商品信息，不需要只是存id，没有多大意义
 	 */
 	@RequestMapping(value = "/order/search")
 	public BaseResponse<List<Order>> listOrder(@RequestBody Order order) {
 		log.info("【/order/search】接口调用开始"+order);
 		List<Order> orderList=productService.searchOrder(order);
-	
+
 		for(Order ordersrc:orderList) {
 			String infoJson=ordersrc.getProduct_info();
 			log.info("【productInfo：】"+infoJson);
