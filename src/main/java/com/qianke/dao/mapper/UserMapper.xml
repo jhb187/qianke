@@ -13,7 +13,7 @@
     
      <update id="changeDeliverManStatus">
       update deliveryman
-      set status=#{status}
+      set workstatus=#{workstatus}
       where openid=#{openid}
      
      </update>
@@ -28,7 +28,7 @@
 
 
 	<select id="listDeliveryMan" resultType="DeliveryMan">
-		select openid, mobile, name, status
+		select openid, mobile, name, workstatus
 		from deliveryman
 		where tenant_code=#{tenant_code}
 	</select>

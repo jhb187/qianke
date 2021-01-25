@@ -50,7 +50,7 @@
 
 	<select id="listProduct" resultType="Product">
 		select
-		id,name,price,count,img
+		id,name,price,count,img,tenant_code as tenantCode
 		from product
 		where tenant_code=#{tenantCode} and
 		category=#{category}
@@ -116,7 +116,8 @@
 
 
 	<update id="confirmDeliver">
-		update orders set status=#{status}
+		update orders set status=#{status},
+		deliveryman=#{deliveryman}
 		where
 		orderid=#{orderid}
 

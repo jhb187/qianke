@@ -132,7 +132,7 @@ public class ProductService {
 		// 修改送水工状态为配送中
 		DeliveryMan deliverMan = new DeliveryMan();
 		deliverMan.setOpenid(order.getDeliveryman());
-		deliverMan.setStatus(1);
+		deliverMan.setWorkstatus(1);
 		userService.deliverManStatusChange(deliverMan);
 		return "success";
 
@@ -165,7 +165,7 @@ public class ProductService {
 		// 修改送水工状态为空闲
 		DeliveryMan deliverMan = new DeliveryMan();
 		deliverMan.setOpenid(order.getDeliveryman());
-		deliverMan.setStatus(0);
+		deliverMan.setWorkstatus(0);
 		userService.deliverManStatusChange(deliverMan);
 
 	}

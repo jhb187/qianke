@@ -19,5 +19,5 @@ public class DeliveryMan {
     String mobile;
     String name;//昵称
     String tenant_code;
-    int status;
+    int workstatus;
 }

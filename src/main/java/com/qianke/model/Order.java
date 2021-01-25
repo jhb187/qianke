@@ -28,7 +28,7 @@ public class Order {
     String mobile;
     String contact;//联系人
     String deliveryman;//配送员//为配送员openid
-    
+	String searchparam; //查询参数
     
     
 	
