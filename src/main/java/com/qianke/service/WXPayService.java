@@ -6,7 +6,6 @@ package com.qianke.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +26,11 @@ import com.qianke.dao.ProductDao;
 import com.qianke.model.CardBank;
 import com.qianke.model.MsgTemplate;
 import com.qianke.model.Order;
-import com.qianke.model.Product;
 import com.qianke.model.TemplateMsg;
 import com.qianke.model.WaterCard;
 import com.qianke.model.WxConfig;
 import com.qianke.model.WxPayDto;
 import com.qianke.util.DateUtil;
-import com.qianke.util.JsonUtil;
 import com.qianke.util.WxUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -107,20 +104,9 @@ public class WXPayService {
 	* @return
 	*/
 	public String getInfoByOrderId(String orderId) {
-		log.info("【orderId：】"+orderId);
 		Order order= productDao.getOrderInfoById(orderId);
-		log.info("【order：】"+order);
 		String info=order.getProduct_info();
-		log.info("【productInfo：】"+info);
-		
-		List<Product> list  =JSON.parseArray(info, Product.class); 
-		
-		String infos="";
-		for(Product product:list) {
-			Product products=productDao.getProductById(product.getId());
-			infos=infos+products.getName()+"  ×  "+product.getCount()+"\n";
-		}
-		 return infos;
+		return info;
 	}
 	
 	
