@@ -74,14 +74,20 @@ public class WXPayController {
 
         Map<String, Object> user = (Map<String, Object>) datas.get("orderId");
         //TODO:根据user  与orderName处理订单，减库存，通知买家，在支付回执成功的时候
-
+        List<Product> list = JSON.parseArray(datas.get("orderName").toString(), Product.class);
+        String infos = "";
+        for (Product product : list) {
+            if (product.getCount() != 0) {
+                infos = infos + product.getName() + "  ×  " + product.getCount() + "\n";
+            }
+        }
 
         String timeStamp = Long.toString(new Date().getTime());
 
         String cellphone = user.get("mobile").toString();
         String orderId = timeStamp + cellphone.substring(cellphone.length() - 4);
         payParam.setOrderId(orderId);
-        payParam.setOrderName(datas.get("orderName").toString());
+        payParam.setOrderName(infos);
         /**生成订单**/
         Order order = new Order();//,
         order.setContact(user.get("contact").toString());
@@ -90,13 +96,6 @@ public class WXPayController {
         order.setOrderid(orderId);
         order.setMoney(datas.get("price").toString());
         order.setOpenid(datas.get("openId").toString());
-        List<Product> list = JSON.parseArray(datas.get("orderName").toString(), Product.class);
-        String infos = "";
-        for (Product product : list) {
-            if (product.getCount() != 0) {
-                infos = infos + product.getName() + "  ×  " + product.getCount() + "<br>";
-            }
-        }
         order.setProduct_info(infos);
         order.setCreate_time(DateUtil.now());
         order.setTenant_code(datas.get("tenantCode").toString());

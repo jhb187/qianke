@@ -3,7 +3,6 @@
  */
 package com.qianke.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.qianke.controller.base.BaseResponse;
 import com.qianke.model.*;
 import com.qianke.service.ProductService;
@@ -143,18 +142,6 @@ public class ProductController {
 	public BaseResponse<List<Order>> listOrder(@RequestBody Order order) {
 		log.info("【/order/search】接口调用开始"+order);
 		List<Order> orderList=productService.searchOrder(order);
-
-		for(Order ordersrc:orderList) {
-			String infoJson=ordersrc.getProduct_info();
-			log.info("【productInfo：】"+infoJson);
-			List<Product> list  =JSON.parseArray(infoJson, Product.class); 
-			String infos="";
-			for(Product product:list) {
-				Product products=productService.getProductById(product.getId());
-				infos=infos+products.getName()+"  ×  "+product.getCount()+"<br>";
-			}
-			ordersrc.setProduct_info(infos);
-		}
 		BaseResponse<List<Order>> result=new BaseResponse<List<Order>>(orderList);
 		return result;
 	}
