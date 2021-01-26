@@ -83,7 +83,19 @@
 		select
 		money,product_info,delivery_address,mobile,contact,orderid,status,create_time
 		from orders
-		where tenant_code=#{tenant_code} and status=#{status}
+		where tenant_code=#{tenant_code}
+		<if test="status!=null">
+			and status=#{status}
+		</if>
+		<if test="contact!=null">
+			and contact like concat('%', #{contact},'%')
+		</if>
+		<if test="mobile!=null">
+			and mobile like concat('%', #{mobile},'%')
+		</if>
+		<if test="delivery_address!=null">
+			and delivery_address like concat('%', #{delivery_address},'%')
+		</if>
 		order
 		by create_time
 	</select>
